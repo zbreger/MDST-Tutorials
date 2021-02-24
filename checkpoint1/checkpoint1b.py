@@ -19,26 +19,33 @@ This should load the data, perform preprocessing, and save the output to the dat
 """
 
 def remove_percents(df, col):
+    df[col] = df[col].str.slice(0,-1)
     return df
 
 def fill_zero_iron(df):
+    df["Iron (% DV)"] = df["Iron (% DV)"].fillna(0)
     return df
     
 def fix_caffeine(df):
+    df["Caffeine (mg)"] = df["Caffeine (mg)"].dropna()
     return df
 
 def standardize_names(df):
+    for x in df.iloc[0]:
+        x.lower()
+        x = x[:x.find('(')]
     return df
 
 def fix_strings(df, col):
+    df[col] = df[col].lower()
+    df[col] = df[col].replace('[^a-zA-Z]', '')
     return df
-
 
 def main():
     
     # first, read in the raw data
     df = pd.read_csv('../data/starbucks.csv')
-    
+
     # the columns below represent percent daily value and are stored as strings with a percent sign, e.g. '0%'
     # complete the remove_percents function to remove the percent symbol and convert the columns to a numeric type
     pct_DV = ['Vitamin A (% DV)', 'Vitamin C (% DV)', 'Calcium (% DV)', 'Iron (% DV)']
